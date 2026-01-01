@@ -3,87 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>$BURN | Ecosystem Terminal</title>
+    <title>$BURN | Neural Ad-Network</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@300;600&display=swap');
+
         :root { 
-            --gold: #ff9d00; --gold-glow: rgba(255, 157, 0, 0.3);
-            --bg: #0a0a0c; --card: rgba(25, 25, 30, 0.8); 
-            --text: #ffffff; --subtext: #a0a0a8;
-            --green: #00ff88; --purple: #8a2be2;
+            --gold: #ff9d00; --gold-glow: rgba(255, 157, 0, 0.4);
+            --neon-blue: #00d2ff; --bg: #030305; --panel: rgba(15, 15, 20, 0.95);
         }
 
         body { 
-            background: radial-gradient(circle at top, #1a1a2e 0%, var(--bg) 70%);
-            color: var(--text); font-family: 'Inter', system-ui, sans-serif;
-            margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh;
-            overflow-x: hidden;
+            background: var(--bg); color: #fff; font-family: 'Rajdhani', sans-serif; margin: 0;
+            display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+            background-image: radial-gradient(circle at 50% 0%, #1a1a2e 0%, transparent 70%);
         }
 
-        /* Glassmorphism Header */
-        header { 
-            width: 100%; padding: 25px 0; text-align: center;
-            backdrop-filter: blur(10px); background: rgba(0,0,0,0.5);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+        /* LIVE BURN TICKER */
+        .burn-ticker {
+            width: 100%; background: rgba(255, 157, 0, 0.1); border-bottom: 1px solid var(--gold);
+            padding: 10px 0; overflow: hidden; white-space: nowrap; font-family: 'Orbitron'; font-size: 10px;
+        }
+        .ticker-text { display: inline-block; animation: scroll 30s linear infinite; color: var(--gold); }
+        @keyframes scroll { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+
+        header { width: 100%; padding: 30px 0; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .logo { font-family: 'Orbitron'; font-size: 32px; color: var(--gold); letter-spacing: 10px; text-shadow: 0 0 15px var(--gold-glow); }
+
+        .main-container { display: flex; gap: 20px; width: 95%; max-width: 1000px; margin-top: 20px; flex-wrap: wrap; }
+
+        /* AD SIDEBARS */
+        .ad-sidebar { 
+            flex: 1; min-width: 160px; background: rgba(255,255,255,0.02); border: 1px dashed #333;
+            display: flex; flex-direction: column; gap: 10px; padding: 10px; border-radius: 8px;
+        }
+        .ad-unit {
+            width: 100%; height: 200px; background: #000; border: 1px solid #222;
+            display: flex; align-items: center; justify-content: center; text-align: center;
+            font-size: 11px; color: #444; text-transform: uppercase; cursor: pointer; transition: 0.3s;
+        }
+        .ad-unit:hover { border-color: var(--gold); color: var(--gold); background: rgba(255,157,0,0.05); }
+
+        /* CENTER TERMINAL */
+        .terminal-core { flex: 2; min-width: 350px; }
+        .tabs { display: flex; background: #111; padding: 5px; border-radius: 8px; margin-bottom: 15px; }
+        .tab-btn { flex: 1; background: none; border: none; color: #555; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; padding: 10px; transition: 0.3s; }
+        .tab-btn.active { color: var(--gold); background: rgba(255,157,0,0.1); }
+
+        .hud-panel { 
+            background: var(--panel); border: 1px solid rgba(255,255,255,0.1); padding: 30px; 
+            border-radius: 4px; box-shadow: 0 0 40px rgba(0,0,0,0.8);
         }
 
-        .logo { 
-            font-weight: 900; font-size: 28px; color: var(--gold);
-            text-transform: uppercase; letter-spacing: 5px;
-            text-shadow: 0 0 20px var(--gold-glow);
+        .balance-val { font-family: 'Orbitron'; font-size: 42px; color: #fff; text-shadow: 0 0 20px var(--gold-glow); }
+
+        .cyber-btn {
+            width: 100%; padding: 18px; margin-top: 15px; background: transparent; border: 1px solid var(--gold);
+            color: var(--gold); font-family: 'Orbitron'; font-size: 11px; cursor: pointer; transition: 0.3s;
         }
+        .cyber-btn:hover:not(:disabled) { background: var(--gold); color: #000; box-shadow: 0 0 20px var(--gold-glow); }
+        .cyber-btn:disabled { border-color: #222; color: #222; }
 
-        /* Control Bar */
-        .controls { display: flex; gap: 15px; margin-top: 15px; justify-content: center; }
-        .icon-btn { 
-            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-            color: var(--subtext); padding: 8px 15px; border-radius: 30px; 
-            cursor: pointer; font-size: 11px; font-weight: bold; transition: 0.3s;
-        }
-        .icon-btn:hover { background: var(--gold); color: #000; border-color: var(--gold); }
+        .wp-content { font-size: 14px; line-height: 1.8; color: #aaa; display: none; }
+        .wp-content.active { display: block; }
+        .wp-content h2 { color: #fff; font-family: 'Orbitron'; font-size: 18px; margin-top: 0; }
+        .wp-highlight { color: var(--gold); }
 
-        /* Tabs */
-        .tabs { display: flex; gap: 10px; margin: 30px 0; width: 90%; max-width: 420px; }
-        .tab-btn { 
-            flex: 1; padding: 14px; background: var(--card); border: 1px solid rgba(255,255,255,0.05);
-            color: var(--subtext); border-radius: 12px; cursor: pointer; font-weight: bold;
-            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .tab-btn.active { 
-            background: var(--gold); color: #000; box-shadow: 0 0 25px var(--gold-glow);
-            transform: translateY(-2px);
-        }
-
-        /* Content Sections */
-        .content-section { display: none; width: 90%; max-width: 420px; }
-        .content-section.active { display: block; animation: slideUp 0.5s ease-out; }
-
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Terminal Card */
-        .glass-panel { 
-            background: var(--card); backdrop-filter: blur(15px);
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 24px;
-            padding: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
-
-        .balance-amount { font-size: 42px; font-weight: 800; color: #fff; margin: 10px 0; }
-        .daily-rate { color: var(--green); font-size: 14px; opacity: 0.9; }
-
-        /* Buttons */
-        .btn-grid { display: flex; flex-direction: column; gap: 15px; margin-top: 30px; }
-        .main-btn { 
-            padding: 20px; border-radius: 14px; border: none; font-weight: 800;
-            text-transform: uppercase; cursor: pointer; transition: 0.3s;
-        }
-        .btn-gold { background: var(--gold); color: #000; box-shadow: 0 4px 15px var(--gold-glow); }
-        .btn-gold:hover { transform: scale(1.02); filter: brightness(1.1); }
-        .btn-purple { background: linear-gradient(135deg, #6e45e2 0%, #88d3ce 100%); color: #fff; }
-
-        /* Whitepaper Styling */
-        .wp-text { color: var(--subtext); line-height: 1.8; font-size: 15px; }
-        .wp-highlight { color: var(--gold); font-weight: bold; }
-
-        footer { margin-top: auto; padding: 30px; color: #333; font-size: 12px; }
+        footer { margin-top: auto; padding: 40px; color: #222; font-family: 'Orbitron'; font-size: 9px; }
     </style>
 </head>
 <body onload="init()">
@@ -92,114 +77,119 @@
         <source src="https://www.bensound.com/bensound-music/bensound-thejazzpiano.mp3" type="audio/mpeg">
     </audio>
 
-    <header>
-        <div class="logo">$BURN ECOSYSTEM</div>
-        <div class="controls">
-            <button class="icon-btn" onclick="toggleMusic()" id="musicBtn">Music: OFF</button>
-            <a href="https://t.me/BurnTokenEcosystem" target="_blank" class="icon-btn">Telegram</a>
+    <div class="burn-ticker">
+        <div class="ticker-text">
+            GLOBAL_BURN_INITIATED >> USER_741 BURNED 4,200 $BURN // REVENUE_BUYBACK COMPLETED: 12.4 ETH >> TOTAL_BURNED: 154,209,101 $BURN // NODE_77_ACTIVE >> 
+            GLOBAL_BURN_INITIATED >> USER_992 BURNED 1,500 $BURN // REVENUE_BUYBACK COMPLETED: 0.8 ETH >> TOTAL_BURNED: 154,210,601 $BURN //
         </div>
+    </div>
+
+    <header>
+        <div class="logo">$BURN</div>
     </header>
 
-    <div class="tabs">
-        <button id="t1" class="tab-btn active" onclick="openTab('terminal-tab', 't1')">Terminal</button>
-        <button id="t2" class="tab-btn" onclick="openTab('whitepaper-tab', 't2')">Whitepaper</button>
-    </div>
+    <div class="main-container">
+        <div class="ad-sidebar">
+            <div class="ad-unit" onclick="alert('Ad space available. Contact Dev.')">THIS COULD BE<br>YOUR AD</div>
+            <div class="ad-unit" onclick="alert('Ad space available. Contact Dev.')">SPACE FOR RENT<br>0.5 ETH/WK</div>
+        </div>
 
-    <div id="terminal-tab" class="content-section active">
-        <div class="glass-panel">
-            <span style="font-size: 11px; color: var(--subtext); letter-spacing: 2px;">VAULTED ASSETS</span>
-            <div class="balance-amount" id="bal">1,000.0000</div>
-            <div class="daily-rate">Mining Rate: +<span id="yield">5.00</span> $BURN / 24h</div>
-
-            <div class="btn-grid">
-                <button class="main-btn btn-gold" id="btn-start" onclick="startNode()">Activate Mining Node</button>
-                <button class="main-btn btn-purple" onclick="buyMultiplier()">
-                    Turbo Multiplier (2x)
-                    <div style="font-size: 10px; opacity: 0.8;" id="mult-cost">Cost: 1,000 $BURN</div>
-                </button>
+        <div class="terminal-core">
+            <div class="tabs">
+                <button id="b1" class="tab-btn active" onclick="nav('term', 'b1')">TERMINAL</button>
+                <button id="b2" class="tab-btn" onclick="nav('wp', 'b2')">WHITEPAPER</button>
             </div>
-            <p id="status" style="text-align:center; font-size:12px; color:#555; margin-top:20px;">System Hibernating.</p>
+
+            <div class="hud-panel" id="term-panel">
+                <div id="term-view">
+                    <span style="font-size: 10px; color: var(--gold); letter-spacing: 3px;">NEURAL_VAULT</span>
+                    <div class="balance-val" id="bal">1,000.0000</div>
+                    <div style="color:var(--neon-blue); font-size: 11px;">YIELD: +<span id="yield">5.00</span> / 24H</div>
+
+                    <button class="cyber-btn" onclick="auth()">01_AUTHORIZE_SHIFT (3_ADS)</button>
+                    <button class="cyber-btn" id="start" disabled onclick="boot()">02_BOOT_NODE</button>
+                    <button class="cyber-btn" onclick="upgrade()" style="border-color:#9d50bb; color:#9d50bb;">
+                        TURBO_MULTIPLIER_2X
+                        <div style="font-size: 8px;" id="cost">COST: 1,000</div>
+                    </button>
+                </div>
+
+                <div id="wp-view" class="wp-content">
+                    <h2>THE $BURN STRATEGY</h2>
+                    <p>The <span class="wp-highlight">$BURN Ecosystem</span> is a first-of-its-kind decentralized ad-revenue aggregator. </p>
+                    <p><b>1. REVENUE CAPTURE:</b> All ads displayed on this terminal generate real-world capital.</p>
+                    <p><b>2. REVENUE RECYCLING:</b> 100% of generated revenue is used to purchase $BURN from the liquidity pool.</p>
+                    <p><b>3. THE VOID:</b> Every token purchased via revenue is sent to the <span class="wp-highlight">0x000...DEAD</span> address, ensuring your tokens grow rarer every second.</p>
+                    <button onclick="wipe()" style="color: #400; background:none; border:none; font-size:9px; cursor:pointer;">[ ERASE_DATA ]</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="ad-sidebar">
+            <div class="ad-unit" onclick="alert('Ad space available. Contact Dev.')">ADVERTISE<br>HERE</div>
+            <div class="ad-unit" onclick="alert('Ad space available. Contact Dev.')">PROMOTIONS<br>OPEN</div>
         </div>
     </div>
 
-    <div id="whitepaper-tab" class="content-section">
-        <div class="glass-panel wp-text">
-            <h2 style="color:#fff; margin-top:0;">Ecosystem Vision</h2>
-            <p>The <span class="wp-highlight">$BURN</span> protocol transforms digital attention into tangible scarcity. By leveraging ad-revenue cycles, we create a constant buy-pressure on the token.</p>
-            <div style="background:rgba(255,255,255,0.03); padding:15px; border-radius:10px; border-left:4px solid var(--gold);">
-                <b>Revenue Split:</b> 100% of Node revenue is used for automated $BURN buy-backs and permanent destruction.
-            </div>
-            <h3 style="color:#fff;">Phase 1</h3>
-            <p>Development of the Terminal UI and Proof-of-Concept mining logic. Establishing the foundation for a global ad-network integration.</p>
-            <button onclick="resetGame()" style="background:none; border:none; color:#444; font-size:10px; cursor:pointer; margin-top:20px;">[ RESET TERMINAL ]</button>
-        </div>
-    </div>
-
-    <footer>EST. 2025 | SHANE, FOUNDER</footer>
+    <footer>FLORIDA_DEVELOPMENT_UNIT // 2025</footer>
 
     <script>
-        let stats = { balance: 1000.0, yield: 5.0, cost: 1000, running: false, last: Date.now() };
+        let state = { bal: 1000.0, yld: 5.0, cst: 1000, active: false, ts: Date.now() };
 
         function init() {
-            const saved = localStorage.getItem('burn_v2_2');
-            if (saved) {
-                const data = JSON.parse(saved);
-                const diff = (Date.now() - data.last) / 1000;
-                const earnings = data.running ? (data.yield / 86400) * diff : 0;
-                stats = { ...data, balance: data.balance + earnings, last: Date.now() };
-                if (earnings > 0.01) alert("Node Revenue Collected: " + earnings.toFixed(4) + " $BURN");
+            const save = localStorage.getItem('burn_cyber_v4');
+            if (save) {
+                const d = JSON.parse(save);
+                const seconds = (Date.now() - d.ts) / 1000;
+                let earned = d.active ? (d.yld / 86400) * seconds : 0;
+                state = { ...d, bal: d.bal + earned, ts: Date.now() };
+                if (earned > 0.01) alert("NEURAL REVENUE RESTORED: " + earned.toFixed(4));
             }
-            updateUI();
+            ui();
         }
 
-        function save() {
-            stats.last = Date.now();
-            localStorage.setItem('burn_v2_2', JSON.stringify(stats));
-        }
+        function save() { state.ts = Date.now(); localStorage.setItem('burn_cyber_v4', JSON.stringify(state)); }
 
-        function openTab(id, btn) {
-            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+        function nav(type, btn) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
             document.getElementById(btn).classList.add('active');
+            if(type === 'term') {
+                document.getElementById('term-view').style.display = 'block';
+                document.getElementById('wp-view').style.display = 'none';
+            } else {
+                document.getElementById('term-view').style.display = 'none';
+                document.getElementById('wp-view').style.display = 'block';
+            }
         }
 
-        function startNode() {
-            stats.running = true;
-            document.getElementById('status').innerText = "NODE ONLINE // MINING ACTIVE";
-            document.getElementById('status').style.color = "var(--green)";
-            save();
+        function auth() {
+            document.getElementById('bgMusic').play();
+            alert("UPLINKING AD 1/3...");
+            alert("UPLINKING AD 2/3...");
+            alert("UPLINKING AD 3/3...");
+            document.getElementById('start').disabled = false;
         }
 
-        function buyMultiplier() {
-            if (stats.balance >= stats.cost) {
-                stats.balance -= stats.cost;
-                stats.yield *= 2;
-                stats.cost *= 10;
-                updateUI();
-                save();
-            } else { alert("Insufficient Balance"); }
+        function boot() { state.active = true; save(); alert("NODE ONLINE"); }
+
+        function upgrade() {
+            if (state.bal >= state.cst) {
+                state.bal -= state.cst; state.yld *= 2; state.cst *= 10; ui(); save();
+            } else { alert("INSUFFICIENT FUNDS"); }
         }
 
-        function updateUI() {
-            document.getElementById('bal').innerText = stats.balance.toLocaleString(undefined, {minimumFractionDigits: 4});
-            document.getElementById('yield').innerText = stats.yield.toFixed(2);
-            document.getElementById('mult-cost').innerText = "Cost: " + stats.cost.toLocaleString() + " $BURN";
+        function ui() {
+            document.getElementById('bal').innerText = state.bal.toLocaleString(undefined, {minimumFractionDigits: 4});
+            document.getElementById('yield').innerText = state.yld.toFixed(2);
+            document.getElementById('cost').innerText = "COST: " + state.cst.toLocaleString();
         }
 
-        function toggleMusic() {
-            const m = document.getElementById('bgMusic');
-            const btn = document.getElementById('musicBtn');
-            if (m.paused) { m.play(); btn.innerText = "Music: ON"; }
-            else { m.pause(); btn.innerText = "Music: OFF"; }
-        }
-
-        function resetGame() { if(confirm("Erase all progress?")) { localStorage.clear(); location.reload(); } }
+        function wipe() { if(confirm("DELETE SAVE?")) { localStorage.clear(); location.reload(); } }
 
         setInterval(() => {
-            if(stats.running) {
-                stats.balance += (stats.yield / 172800);
-                document.getElementById('bal').innerText = stats.balance.toLocaleString(undefined, {minimumFractionDigits: 4});
+            if(state.active) {
+                state.bal += (state.yld / 172800);
+                document.getElementById('bal').innerText = state.bal.toLocaleString(undefined, {minimumFractionDigits: 4});
             }
         }, 500);
 
