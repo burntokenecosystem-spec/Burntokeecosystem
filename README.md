@@ -22,6 +22,7 @@
         .btn-active { background: var(--gold); color: #000; }
         .btn-multiplier { background: linear-gradient(45deg, var(--purple), #6c2cf5); color: #fff; }
         .btn:disabled { opacity: 0.2; cursor: not-allowed; }
+        #save-status { font-size: 9px; color: #444; margin-top: 10px; text-transform: uppercase; letter-spacing: 1px; }
         footer { margin-top: auto; padding: 20px; color: #444; font-size: 11px; text-align:center; }
     </style>
 </head>
@@ -32,7 +33,6 @@
         <div class="social-row">
             <a href="https://x.com/BurnToken268358" target="_blank" class="small-btn s-tw">Twitter</a>
             <a href="https://t.me/BurnTokenEcosystem" target="_blank" class="small-btn s-tg">Telegram</a>
-            <button class="small-btn" onclick="saveGame()" style="color:var(--green); border-color:var(--green); background:none;">Save Progress</button>
         </div>
     </header>
 
@@ -52,33 +52,54 @@
             </button>
             <button onclick="resetGame()" style="background:none; border:none; color:#333; font-size:10px; margin-top:10px; cursor:pointer;">[ Reset All Data ]</button>
         </div>
-        <p id="status-msg" style="font-size: 11px; color: #555; margin-top: 15px; text-align: center;">Terminal Ready.</p>
+        <div id="save-status" style="text-align: center;">Syncing with Browser...</div>
+        <p id="status-msg" style="font-size: 11px; color: #555; margin-top: 15px; text-align: center;">Ready.</p>
     </div>
 
     <footer>&copy; 2025 Burner Ecosystem. Shane, Founder.</footer>
 
     <script>
-        // Use Global variables
         window.stats = {
             balance: 1000.0000,
             dailyYield: 5.00,
             multiplierCost: 1000,
-            isRunning: false
+            isRunning: false,
+            lastSaved: Date.now()
         };
 
         function init() {
-            const saved = localStorage.getItem('burnerSaveV1');
+            const saved = localStorage.getItem('burnerSaveV3');
             if (saved) {
-                window.stats = JSON.parse(saved);
-                // Force isRunning to false on refresh so they have to watch ads again
-                window.stats.isRunning = false; 
+                const loadedData = JSON.parse(saved);
+                const now = Date.now();
+                const secondsPassed = (now - loadedData.lastSaved) / 1000;
+                
+                let offlineEarnings = 0;
+                if (loadedData.isRunning) {
+                    offlineEarnings = (loadedData.dailyYield / 86400) * secondsPassed;
+                }
+
+                window.stats = {
+                    ...loadedData,
+                    balance: loadedData.balance + offlineEarnings,
+                    lastSaved: now
+                };
+                
+                if (offlineEarnings > 0.0001) {
+                    alert("OFFLINE REVENUE: " + offlineEarnings.toFixed(4) + " $BURN collected.");
+                }
                 updateUI();
             }
         }
 
         function saveGame() {
-            localStorage.setItem('burnerSaveV1', JSON.stringify(window.stats));
-            console.log("Saved");
+            window.stats.lastSaved = Date.now();
+            localStorage.setItem('burnerSaveV3', JSON.stringify(window.stats));
+            
+            // Visual feedback for the high-speed save
+            const status = document.getElementById('save-status');
+            status.style.color = "var(--green)";
+            setTimeout(() => { status.style.color = "#222"; }, 200);
         }
 
         function triggerAds() {
@@ -90,6 +111,7 @@
             window.stats.isRunning = true;
             document.getElementById('status-msg').innerText = "Node Active...";
             document.getElementById('status-msg').style.color = "var(--green)";
+            saveGame();
         }
 
         function buyMultiplier() {
@@ -99,9 +121,8 @@
                 window.stats.multiplierCost *= 10;
                 updateUI();
                 saveGame();
-                alert("Yield Doubled!");
             } else {
-                alert("Need more $BURN");
+                alert("Insufficient $BURN");
             }
         }
 
@@ -112,25 +133,24 @@
         }
 
         function resetGame() {
-            if(confirm("Erase all data?")) {
-                localStorage.removeItem('burnerSaveV1');
+            if(confirm("Erase all progress?")) {
+                localStorage.removeItem('burnerSaveV3');
                 location.reload();
             }
         }
 
-        // The Clock
+        // Live Ticking (Visual)
         setInterval(() => {
             if(window.stats.isRunning) {
-                window.stats.balance += (window.stats.dailyYield / 864000);
+                window.stats.balance += (window.stats.dailyYield / 172800); // Ticking every 500ms
                 document.getElementById('bal').innerText = window.stats.balance.toFixed(4);
             }
-        }, 100);
+        }, 500);
 
-        // Auto-save every 5 seconds
+        // High-Frequency Save (Every 0.5 Seconds)
         setInterval(() => {
-            if(window.stats.isRunning) saveGame();
-        }, 5000);
+            saveGame();
+        }, 500);
     </script>
 </body>
 </html>
-
