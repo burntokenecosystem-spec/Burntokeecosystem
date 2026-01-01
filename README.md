@@ -1,76 +1,161 @@
 
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>$BURN | Neural Ad-Network</title>
+    <title>$BURN ECOSYSTEM | Web3 Terminal</title>
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@300;600&display=swap');
-
+        /* --- BRANDING & COLOR VARIABLES --- */
         :root { 
-            --gold: #ff9d00; --gold-glow: rgba(255, 157, 0, 0.4);
-            --neon-blue: #00d2ff; --bg: #030305; --panel: rgba(15, 15, 20, 0.95);
+            --gold: #ff9d00; 
+            --bg-color: #050505; 
+            --panel-bg: #111114; 
+            --text-main: #eeeeee; 
+            --text-dim: #888888; 
+            --success: #00ff88;
         }
 
+        /* --- GLOBAL STYLES --- */
         body { 
-            background: var(--bg); color: #fff; font-family: 'Rajdhani', sans-serif; margin: 0;
-            display: flex; flex-direction: column; align-items: center; min-height: 100vh;
-            background-image: radial-gradient(circle at 50% 0%, #1a1a2e 0%, transparent 70%);
+            background-color: var(--bg-color); 
+            color: var(--text-main); 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            min-height: 100vh;
         }
 
-        /* LIVE BURN TICKER */
+        /* --- LIVE BURN TICKER --- */
         .burn-ticker {
-            width: 100%; background: rgba(255, 157, 0, 0.1); border-bottom: 1px solid var(--gold);
-            padding: 10px 0; overflow: hidden; white-space: nowrap; font-family: 'Orbitron'; font-size: 10px;
+            width: 100%; 
+            background: #000; 
+            border-bottom: 1px solid #222;
+            padding: 10px 0; 
+            overflow: hidden; 
+            white-space: nowrap; 
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px;
         }
-        .ticker-text { display: inline-block; animation: scroll 30s linear infinite; color: var(--gold); }
-        @keyframes scroll { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+        .ticker-text { 
+            display: inline-block; 
+            animation: scroll-left 35s linear infinite; 
+            color: var(--gold); 
+        }
+        @keyframes scroll-left { 
+            from { transform: translateX(100%); } 
+            to { transform: translateX(-100%); } 
+        }
 
-        header { width: 100%; padding: 30px 0; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .logo { font-family: 'Orbitron'; font-size: 32px; color: var(--gold); letter-spacing: 10px; text-shadow: 0 0 15px var(--gold-glow); }
+        /* --- HEADER & CONNECT WALLET --- */
+        header { 
+            width: 100%; 
+            padding: 20px 0; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 1px solid #222; 
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+        .logo { 
+            font-weight: bold; 
+            font-size: 28px; 
+            color: var(--gold); 
+            letter-spacing: 5px; 
+            text-transform: uppercase;
+        }
+        .wallet-container {
+            position: absolute;
+            right: 5%;
+        }
+        .btn-connect {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+        .btn-connect:hover {
+            background: var(--gold);
+            color: #000;
+            box-shadow: 0 0 15px rgba(255, 157, 0, 0.4);
+        }
 
-        .main-container { display: flex; gap: 20px; width: 95%; max-width: 1000px; margin-top: 20px; flex-wrap: wrap; }
+        /* --- MAIN LAYOUT GRID --- */
+        .layout-wrapper { 
+            display: flex; 
+            gap: 25px; 
+            width: 95%; 
+            max-width: 1200px; 
+            margin-top: 40px; 
+        }
 
-        /* AD SIDEBARS */
+        /* --- ADVERTISEMENT SIDEBARS --- */
         .ad-sidebar { 
-            flex: 1; min-width: 160px; background: rgba(255,255,255,0.02); border: 1px dashed #333;
-            display: flex; flex-direction: column; gap: 10px; padding: 10px; border-radius: 8px;
+            flex: 0 0 160px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 15px; 
         }
-        .ad-unit {
-            width: 100%; height: 200px; background: #000; border: 1px solid #222;
+        .ad-placeholder {
+            width: 100%; height: 250px; background: var(--panel-bg); border: 1px solid #222;
             display: flex; align-items: center; justify-content: center; text-align: center;
-            font-size: 11px; color: #444; text-transform: uppercase; cursor: pointer; transition: 0.3s;
+            font-size: 11px; color: #444; font-weight: bold; cursor: pointer; border-radius: 8px;
+            transition: 0.3s;
         }
-        .ad-unit:hover { border-color: var(--gold); color: var(--gold); background: rgba(255,157,0,0.05); }
+        .ad-placeholder:hover { border-color: var(--gold); color: var(--gold); }
 
-        /* CENTER TERMINAL */
-        .terminal-core { flex: 2; min-width: 350px; }
-        .tabs { display: flex; background: #111; padding: 5px; border-radius: 8px; margin-bottom: 15px; }
-        .tab-btn { flex: 1; background: none; border: none; color: #555; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; padding: 10px; transition: 0.3s; }
-        .tab-btn.active { color: var(--gold); background: rgba(255,157,0,0.1); }
+        /* --- CENTER TERMINAL CORE --- */
+        .terminal-container { flex: 1; min-width: 350px; }
+        .navigation-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab-button { 
+            flex: 1; padding: 14px; background: #1a1a1a; border: 1px solid #333; 
+            color: #666; cursor: pointer; font-weight: bold; border-radius: 6px;
+            text-transform: uppercase; transition: 0.3s;
+        }
+        .tab-button.active { background: var(--panel-bg); border-color: var(--gold); color: var(--gold); }
 
-        .hud-panel { 
-            background: var(--panel); border: 1px solid rgba(255,255,255,0.1); padding: 30px; 
-            border-radius: 4px; box-shadow: 0 0 40px rgba(0,0,0,0.8);
+        .panel { 
+            background: var(--panel-bg); border: 1px solid #222; padding: 40px; 
+            border-radius: 12px; box-shadow: 0 15px 40px rgba(0,0,0,0.6);
         }
 
-        .balance-val { font-family: 'Orbitron'; font-size: 42px; color: #fff; text-shadow: 0 0 20px var(--gold-glow); }
+        /* --- GAME UI ELEMENTS --- */
+        .balance-val { font-size: 48px; font-weight: bold; display: block; margin: 10px 0; color: #fff; }
+        .yield-badge { color: var(--success); font-size: 15px; font-weight: bold; }
 
-        .cyber-btn {
-            width: 100%; padding: 18px; margin-top: 15px; background: transparent; border: 1px solid var(--gold);
-            color: var(--gold); font-family: 'Orbitron'; font-size: 11px; cursor: pointer; transition: 0.3s;
+        .action-stack { display: flex; flex-direction: column; gap: 15px; margin-top: 30px; }
+        .main-btn { padding: 20px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 14px; transition: 0.2s; }
+        .btn-auth { background: #ffffff; color: #000; }
+        .btn-start { background: var(--gold); color: #000; }
+        .btn-upgrade { background: linear-gradient(45deg, #a349a4, #6c2cf5); color: #fff; }
+        .main-btn:disabled { opacity: 0.2; cursor: not-allowed; }
+
+        /* --- WHITEPAPER --- */
+        .whitepaper-body { line-height: 1.8; font-size: 16px; color: #cccccc; }
+        .whitepaper-body h2 { color: var(--gold); border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .strategy-box { background: #000; padding: 20px; border-left: 5px solid var(--gold); margin: 25px 0; border-radius: 4px; }
+
+        footer { margin-top: auto; padding: 40px; color: #333; font-size: 12px; }
+
+        @media (max-width: 900px) { 
+            .ad-sidebar { display: none; } 
+            .wallet-container { position: static; margin-top: 10px; }
+            header { flex-direction: column; }
         }
-        .cyber-btn:hover:not(:disabled) { background: var(--gold); color: #000; box-shadow: 0 0 20px var(--gold-glow); }
-        .cyber-btn:disabled { border-color: #222; color: #222; }
-
-        .wp-content { font-size: 14px; line-height: 1.8; color: #aaa; display: none; }
-        .wp-content.active { display: block; }
-        .wp-content h2 { color: #fff; font-family: 'Orbitron'; font-size: 18px; margin-top: 0; }
-        .wp-highlight { color: var(--gold); }
-
-        footer { margin-top: auto; padding: 40px; color: #222; font-family: 'Orbitron'; font-size: 9px; }
     </style>
 </head>
+
 <body onload="init()">
 
     <audio id="bgMusic" loop>
@@ -79,121 +164,147 @@
 
     <div class="burn-ticker">
         <div class="ticker-text">
-            GLOBAL_BURN_INITIATED >> USER_741 BURNED 4,200 $BURN // REVENUE_BUYBACK COMPLETED: 12.4 ETH >> TOTAL_BURNED: 154,209,101 $BURN // NODE_77_ACTIVE >> 
-            GLOBAL_BURN_INITIATED >> USER_992 BURNED 1,500 $BURN // REVENUE_BUYBACK COMPLETED: 0.8 ETH >> TOTAL_BURNED: 154,210,601 $BURN //
+            NETWORK_STATUS: ONLINE // TOTAL_BURNED: 154,209,101 $BURN // REVENUE_BUYBACK_PENDING: 4.2 ETH // NODE_ACTIVE_USERS: 1,429 // GLOBAL_BURN_INITIATED >> 
         </div>
     </div>
 
     <header>
-        <div class="logo">$BURN</div>
+        <div class="logo">$BURN ECOSYSTEM</div>
+        <div class="wallet-container">
+            <button class="btn-connect" id="walletBtn" onclick="connectWallet()">Connect Wallet</button>
+        </div>
     </header>
 
-    <div class="main-container">
-        <div class="ad-sidebar">
-            <div class="ad-unit" onclick="alert('Ad space available. Contact Dev.')">THIS COULD BE<br>YOUR AD</div>
-            <div class="ad-unit" onclick="alert('Ad space available. Contact Dev.')">SPACE FOR RENT<br>0.5 ETH/WK</div>
-        </div>
+    <div class="layout-wrapper">
+        
+        <aside class="ad-sidebar">
+            <div class="ad-placeholder" onclick="adInquiry()">THIS COULD BE<br>YOUR AD</div>
+            <div class="ad-placeholder" onclick="adInquiry()">ADVERTISE<br>HERE</div>
+        </aside>
 
-        <div class="terminal-core">
-            <div class="tabs">
-                <button id="b1" class="tab-btn active" onclick="nav('term', 'b1')">TERMINAL</button>
-                <button id="b2" class="tab-btn" onclick="nav('wp', 'b2')">WHITEPAPER</button>
+        <main class="terminal-container">
+            <div class="navigation-tabs">
+                <button id="nav-term" class="tab-button active" onclick="switchTab('terminal-view', 'nav-term')">Terminal</button>
+                <button id="nav-wp" class="tab-button" onclick="switchTab('wp-view', 'nav-wp')">Whitepaper</button>
             </div>
 
-            <div class="hud-panel" id="term-panel">
-                <div id="term-view">
-                    <span style="font-size: 10px; color: var(--gold); letter-spacing: 3px;">NEURAL_VAULT</span>
-                    <div class="balance-val" id="bal">1,000.0000</div>
-                    <div style="color:var(--neon-blue); font-size: 11px;">YIELD: +<span id="yield">5.00</span> / 24H</div>
+            <div id="terminal-view" class="panel">
+                <span style="font-size: 11px; color: var(--text-dim); letter-spacing: 2px;">SECURE VAULT BALANCE</span>
+                <span class="balance-val" id="display-bal">1,000.0000</span>
+                <span class="yield-badge">Mining Rate: +<span id="display-yield">5.00</span> $BURN / 24h</span>
 
-                    <button class="cyber-btn" onclick="auth()">01_AUTHORIZE_SHIFT (3_ADS)</button>
-                    <button class="cyber-btn" id="start" disabled onclick="boot()">02_BOOT_NODE</button>
-                    <button class="cyber-btn" onclick="upgrade()" style="border-color:#9d50bb; color:#9d50bb;">
-                        TURBO_MULTIPLIER_2X
-                        <div style="font-size: 8px;" id="cost">COST: 1,000</div>
+                <div class="action-stack">
+                    <button class="main-btn btn-auth" onclick="runAuthSequence()">1. Authorize Shift (3 Ads)</button>
+                    <button class="main-btn btn-start" id="start-node-btn" disabled onclick="activateMining()">2. Activate Node</button>
+                    <button class="main-btn btn-upgrade" onclick="buyTurbo()">
+                        Turbo Multiplier (2x)
+                        <div style="font-size: 10px; opacity: 0.8; margin-top: 4px;" id="display-cost">Cost: 1,000 $BURN</div>
                     </button>
                 </div>
-
-                <div id="wp-view" class="wp-content">
-                    <h2>THE $BURN STRATEGY</h2>
-                    <p>The <span class="wp-highlight">$BURN Ecosystem</span> is a first-of-its-kind decentralized ad-revenue aggregator. </p>
-                    <p><b>1. REVENUE CAPTURE:</b> All ads displayed on this terminal generate real-world capital.</p>
-                    <p><b>2. REVENUE RECYCLING:</b> 100% of generated revenue is used to purchase $BURN from the liquidity pool.</p>
-                    <p><b>3. THE VOID:</b> Every token purchased via revenue is sent to the <span class="wp-highlight">0x000...DEAD</span> address, ensuring your tokens grow rarer every second.</p>
-                    <button onclick="wipe()" style="color: #400; background:none; border:none; font-size:9px; cursor:pointer;">[ ERASE_DATA ]</button>
-                </div>
+                
+                <p id="system-status" style="text-align: center; color: #444; font-size: 12px; margin-top: 25px; font-weight: bold;">SYSTEM STATUS: STANDBY</p>
             </div>
-        </div>
 
-        <div class="ad-sidebar">
-            <div class="ad-unit" onclick="alert('Ad space available. Contact Dev.')">ADVERTISE<br>HERE</div>
-            <div class="ad-unit" onclick="alert('Ad space available. Contact Dev.')">PROMOTIONS<br>OPEN</div>
-        </div>
+            <div id="wp-view" class="panel whitepaper-body" style="display: none;">
+                <h2>The $BURN Strategy</h2>
+                <div class="strategy-box">
+                    <b>THE REVENUE CYCLE:</b><br>
+                    1. <b>Capture:</b> Real-world revenue from terminal advertisements.<br>
+                    2. <b>Market Action:</b> 100% of revenue buys $BURN from liquidity.<br>
+                    3. <b>Destruction:</b> Tokens are sent to the 0xDEAD address.
+                </div>
+                <button onclick="resetSystemData()" style="color: #400; background:none; border:none; cursor:pointer; font-size:10px;">[ WIPE DATA ]</button>
+            </div>
+        </main>
+
+        <aside class="ad-sidebar">
+            <div class="ad-placeholder" onclick="adInquiry()">SPACE FOR RENT</div>
+            <div class="ad-placeholder" onclick="adInquiry()">YOUR BRAND<br>HERE</div>
+        </aside>
+
     </div>
 
-    <footer>FLORIDA_DEVELOPMENT_UNIT // 2025</footer>
+    <footer>FLORIDA DEVELOPMENT UNIT // FOUNDER: SHANE</footer>
 
     <script>
-        let state = { bal: 1000.0, yld: 5.0, cst: 1000, active: false, ts: Date.now() };
+        let gameState = { balance: 1000.0, yieldRate: 5.0, multiplierCost: 1000, isNodeActive: false, lastSaved: Date.now() };
 
         function init() {
-            const save = localStorage.getItem('burn_cyber_v4');
-            if (save) {
-                const d = JSON.parse(save);
-                const seconds = (Date.now() - d.ts) / 1000;
-                let earned = d.active ? (d.yld / 86400) * seconds : 0;
-                state = { ...d, bal: d.bal + earned, ts: Date.now() };
-                if (earned > 0.01) alert("NEURAL REVENUE RESTORED: " + earned.toFixed(4));
+            const saved = localStorage.getItem('burner_dev_v4_4');
+            if (saved) {
+                const p = JSON.parse(saved);
+                const diff = (Date.now() - p.lastSaved) / 1000;
+                let earnings = p.isNodeActive ? (p.yieldRate / 86400) * diff : 0;
+                gameState = { ...p, balance: p.balance + earnings, lastSaved: Date.now() };
+                if (earnings > 0.01) alert("OFFLINE REVENUE: " + earnings.toFixed(4));
             }
-            ui();
+            updateInterface();
+            setInterval(processYield, 500);
+            setInterval(autoSave, 1000);
         }
 
-        function save() { state.ts = Date.now(); localStorage.setItem('burn_cyber_v4', JSON.stringify(state)); }
+        // --- WEB3 SIMULATION ---
+        function connectWallet() {
+            const btn = document.getElementById('walletBtn');
+            btn.innerText = "Connecting...";
+            setTimeout(() => {
+                const fakeAddress = "0x71" + Math.random().toString(36).substring(2, 6) + "..." + Math.random().toString(36).substring(2, 6);
+                btn.innerText = fakeAddress;
+                btn.style.borderColor = "var(--success)";
+                btn.style.color = "var(--success)";
+                alert("Wallet Connected Successfully.");
+            }, 1000);
+        }
 
-        function nav(type, btn) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(btn).classList.add('active');
-            if(type === 'term') {
-                document.getElementById('term-view').style.display = 'block';
-                document.getElementById('wp-view').style.display = 'none';
-            } else {
-                document.getElementById('term-view').style.display = 'none';
-                document.getElementById('wp-view').style.display = 'block';
+        function switchTab(viewId, buttonId) {
+            document.getElementById('terminal-view').style.display = (viewId === 'terminal-view') ? 'block' : 'none';
+            document.getElementById('wp-view').style.display = (viewId === 'wp-view') ? 'block' : 'none';
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(buttonId).classList.add('active');
+        }
+
+        function runAuthSequence() {
+            const audio = document.getElementById('bgMusic');
+            if (audio.paused) audio.play();
+            alert("Ad 1/3..."); alert("Ad 2/3..."); alert("Ad 3/3...");
+            document.getElementById('start-node-btn').disabled = false;
+        }
+
+        function activateMining() {
+            gameState.isNodeActive = true;
+            document.getElementById('system-status').innerText = "SYSTEM STATUS: NODE ONLINE";
+            document.getElementById('system-status').style.color = "var(--success)";
+        }
+
+        function buyTurbo() {
+            if (gameState.balance >= gameState.multiplierCost) {
+                gameState.balance -= gameState.multiplierCost;
+                gameState.yieldRate *= 2;
+                gameState.multiplierCost *= 10;
+                updateInterface();
+            } else { alert("Insufficient Balance."); }
+        }
+
+        function processYield() {
+            if (gameState.isNodeActive) {
+                gameState.balance += (gameState.yieldRate / 172800);
+                document.getElementById('display-bal').innerText = gameState.balance.toLocaleString(undefined, {minimumFractionDigits: 4});
             }
         }
 
-        function auth() {
-            document.getElementById('bgMusic').play();
-            alert("UPLINKING AD 1/3...");
-            alert("UPLINKING AD 2/3...");
-            alert("UPLINKING AD 3/3...");
-            document.getElementById('start').disabled = false;
+        function updateInterface() {
+            document.getElementById('display-bal').innerText = gameState.balance.toLocaleString(undefined, {minimumFractionDigits: 4});
+            document.getElementById('display-yield').innerText = gameState.yieldRate.toFixed(2);
+            document.getElementById('display-cost').innerText = "Cost: " + gameState.multiplierCost.toLocaleString() + " $BURN";
         }
 
-        function boot() { state.active = true; save(); alert("NODE ONLINE"); }
-
-        function upgrade() {
-            if (state.bal >= state.cst) {
-                state.bal -= state.cst; state.yld *= 2; state.cst *= 10; ui(); save();
-            } else { alert("INSUFFICIENT FUNDS"); }
+        function autoSave() {
+            gameState.lastSaved = Date.now();
+            localStorage.setItem('burner_dev_v4_4', JSON.stringify(gameState));
         }
 
-        function ui() {
-            document.getElementById('bal').innerText = state.bal.toLocaleString(undefined, {minimumFractionDigits: 4});
-            document.getElementById('yield').innerText = state.yld.toFixed(2);
-            document.getElementById('cost').innerText = "COST: " + state.cst.toLocaleString();
-        }
-
-        function wipe() { if(confirm("DELETE SAVE?")) { localStorage.clear(); location.reload(); } }
-
-        setInterval(() => {
-            if(state.active) {
-                state.bal += (state.yld / 172800);
-                document.getElementById('bal').innerText = state.bal.toLocaleString(undefined, {minimumFractionDigits: 4});
-            }
-        }, 500);
-
-        setInterval(save, 500);
+        function adInquiry() { alert("Contact Dev Team for ad slot inquiry."); }
+        function resetSystemData() { if (confirm("Wipe all data?")) { localStorage.clear(); location.reload(); } }
     </script>
 </body>
 </html>
