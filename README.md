@@ -1,5 +1,4 @@
 
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -11,134 +10,127 @@
         header { width: 100%; padding: 20px; text-align: center; border-bottom: 1px solid #222; background: #000; }
         .logo { font-weight: bold; font-size: 24px; color: var(--gold); letter-spacing: 3px; }
         .social-row { display: flex; gap: 10px; margin-top: 20px; justify-content: center; flex-wrap: wrap; }
-        .small-btn { padding: 8px 15px; font-size: 11px; border-radius: 20px; text-decoration: none; font-weight: bold; text-transform: uppercase; transition: 0.3s; border: 1px solid #333; }
+        .small-btn { padding: 8px 15px; font-size: 11px; border-radius: 20px; text-decoration: none; font-weight: bold; text-transform: uppercase; border: 1px solid #333; cursor:pointer; }
         .s-tw { color: var(--blue); border-color: var(--blue); }
-        .s-tg { color: var(--tg); border-color: var(--tg); background: rgba(0, 136, 204, 0.1); }
-        .s-sp { color: var(--gold); border-color: var(--gold); }
+        .s-tg { color: var(--tg); border-color: var(--tg); }
         .terminal { background: var(--card); border: 2px solid #222; border-radius: 15px; padding: 30px; margin: 20px 10px; max-width: 400px; width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .balance-amount { font-size: 38px; font-weight: bold; color: #fff; display: block; margin: 5px 0; }
         .daily-rate { color: var(--green); font-size: 14px; }
         .btn-grid { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
-        .btn { padding: 18px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.3s; font-size: 14px; }
+        .btn { padding: 18px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 14px; transition: 0.2s; }
         .btn-auth { background: #fff; color: #000; }
         .btn-active { background: var(--gold); color: #000; }
-        .btn-multiplier { background: linear-gradient(45deg, var(--purple), #6c2cf5); color: #fff; border: 1px solid #fff; }
-        .multiplier-info { font-size: 10px; opacity: 0.8; display: block; margin-top: 4px; }
+        .btn-multiplier { background: linear-gradient(45deg, var(--purple), #6c2cf5); color: #fff; }
         .btn:disabled { opacity: 0.2; cursor: not-allowed; }
-        .roadmap-preview { width: 90%; max-width: 600px; text-align: left; padding: 20px; border-top: 1px solid #222; }
-        footer { margin-top: auto; padding: 20px; color: #444; font-size: 11px; }
+        footer { margin-top: auto; padding: 20px; color: #444; font-size: 11px; text-align:center; }
     </style>
 </head>
-<body onload="loadData()">
+<body onload="init()">
 
     <header>
         <div class="logo">$BURN ECOSYSTEM</div>
         <div class="social-row">
             <a href="https://x.com/BurnToken268358" target="_blank" class="small-btn s-tw">Twitter</a>
             <a href="https://t.me/BurnTokenEcosystem" target="_blank" class="small-btn s-tg">Telegram</a>
-            <a href="mailto:shane@yourproject.com" class="small-btn s-sp">Sponsor</a>
+            <button class="small-btn" onclick="saveGame()" style="color:var(--green); border-color:var(--green); background:none;">Save Progress</button>
         </div>
     </header>
 
     <div class="terminal">
         <div class="balance-display">
             <span style="font-size: 10px; color: #666; letter-spacing: 1px;">VAULTED $BURN</span>
-            <span class="balance-amount" id="bal">0.0000</span>
+            <span class="balance-amount" id="bal">1000.0000</span>
             <span class="daily-rate">Yield: +<span id="yield">5.00</span> / 24h</span>
         </div>
 
         <div class="btn-grid">
-            <button class="btn btn-auth" onclick="triggerAds()">1. Authorize Shift (3 Ads)</button>
-            <button class="btn btn-active" id="btn-start" disabled onclick="startShift()">2. Activate Career Node</button>
+            <button class="btn btn-auth" onclick="triggerAds()">1. Authorize Shift</button>
+            <button class="btn btn-active" id="btn-start" disabled onclick="startShift()">2. Activate Node</button>
             <button class="btn btn-multiplier" id="btn-mult" onclick="buyMultiplier()">
                 Turbo Multiplier (2x)
-                <span class="multiplier-info" id="mult-cost">Cost: 1000 $BURN</span>
+                <div style="font-size:10px;" id="mult-cost">Cost: 1000 $BURN</div>
             </button>
-            <button class="btn btn-reset" style="margin-top:20px; background:none; border:none; color:#333; font-size:9px;" onclick="resetGame()">[ Reset Terminal Data ]</button>
+            <button onclick="resetGame()" style="background:none; border:none; color:#333; font-size:10px; margin-top:10px; cursor:pointer;">[ Reset All Data ]</button>
         </div>
         <p id="status-msg" style="font-size: 11px; color: #555; margin-top: 15px; text-align: center;">Terminal Ready.</p>
-    </div>
-
-    <div class="roadmap-preview">
-        <h3 style="font-size: 14px; color: var(--gold);">DEV LOG: DAY 2</h3>
-        <p style="color: #888; font-size: 13px;"><b>Save Persistence:</b> Web Storage now active. Your $BURN progress is safe in this browser.</p>
     </div>
 
     <footer>&copy; 2025 Burner Ecosystem. Shane, Founder.</footer>
 
     <script>
-        // Default Stats
-        let balance = 1000.0000;
-        let dailyYield = 5.00;
-        let multiplierCost = 1000;
-        let isRunning = false;
+        // Use Global variables
+        window.stats = {
+            balance: 1000.0000,
+            dailyYield: 5.00,
+            multiplierCost: 1000,
+            isRunning: false
+        };
 
-        function saveData() {
-            localStorage.setItem('burnBalance', balance);
-            localStorage.setItem('burnYield', dailyYield);
-            localStorage.setItem('burnMultCost', multiplierCost);
-        }
-
-        function loadData() {
-            if (localStorage.getItem('burnBalance')) {
-                balance = parseFloat(localStorage.getItem('burnBalance'));
-                dailyYield = parseFloat(localStorage.getItem('burnYield'));
-                multiplierCost = parseFloat(localStorage.getItem('burnMultCost'));
-                
-                // Update the screen with saved data
-                document.getElementById('bal').innerText = balance.toFixed(4);
-                document.getElementById('yield').innerText = dailyYield.toFixed(2);
-                document.getElementById('mult-cost').innerText = "Cost: " + multiplierCost.toLocaleString() + " $BURN";
+        function init() {
+            const saved = localStorage.getItem('burnerSaveV1');
+            if (saved) {
+                window.stats = JSON.parse(saved);
+                // Force isRunning to false on refresh so they have to watch ads again
+                window.stats.isRunning = false; 
+                updateUI();
             }
         }
 
+        function saveGame() {
+            localStorage.setItem('burnerSaveV1', JSON.stringify(window.stats));
+            console.log("Saved");
+        }
+
         function triggerAds() {
-            alert("Ads Synchronized.");
+            alert("Ads Verified.");
             document.getElementById('btn-start').disabled = false;
         }
 
         function startShift() {
-            isRunning = true;
-            document.getElementById('status-msg').innerText = "Node Active. Yielding...";
+            window.stats.isRunning = true;
+            document.getElementById('status-msg').innerText = "Node Active...";
             document.getElementById('status-msg').style.color = "var(--green)";
         }
 
         function buyMultiplier() {
-            if (balance >= multiplierCost) {
-                balance -= multiplierCost;
-                dailyYield *= 2;
-                multiplierCost *= 10;
-                saveData(); // Save after purchase
+            if (window.stats.balance >= window.stats.multiplierCost) {
+                window.stats.balance -= window.stats.multiplierCost;
+                window.stats.dailyYield *= 2;
+                window.stats.multiplierCost *= 10;
                 updateUI();
-                alert("YIELD DOUBLED!");
+                saveGame();
+                alert("Yield Doubled!");
             } else {
-                alert("Insufficient tokens.");
+                alert("Need more $BURN");
             }
         }
 
         function updateUI() {
-            document.getElementById('bal').innerText = balance.toFixed(4);
-            document.getElementById('yield').innerText = dailyYield.toFixed(2);
-            document.getElementById('mult-cost').innerText = "Cost: " + multiplierCost.toLocaleString() + " $BURN";
+            document.getElementById('bal').innerText = window.stats.balance.toFixed(4);
+            document.getElementById('yield').innerText = window.stats.dailyYield.toFixed(2);
+            document.getElementById('mult-cost').innerText = "Cost: " + window.stats.multiplierCost.toLocaleString() + " $BURN";
         }
 
         function resetGame() {
-            if(confirm("Erase all progress?")) {
-                localStorage.clear();
+            if(confirm("Erase all data?")) {
+                localStorage.removeItem('burnerSaveV1');
                 location.reload();
             }
         }
 
-        // Ticking logic
+        // The Clock
         setInterval(() => {
-            if(isRunning) {
-                balance += (dailyYield / 864000);
-                document.getElementById('bal').innerText = balance.toFixed(4);
-                // Save periodically (every 10 seconds) so progress isn't lost if they close tab
+            if(window.stats.isRunning) {
+                window.stats.balance += (window.stats.dailyYield / 864000);
+                document.getElementById('bal').innerText = window.stats.balance.toFixed(4);
             }
         }, 100);
-        
-        setInterval(() => { if(isRunning) saveData(); }, 10000);
+
+        // Auto-save every 5 seconds
+        setInterval(() => {
+            if(window.stats.isRunning) saveGame();
+        }, 5000);
     </script>
 </body>
 </html>
+
