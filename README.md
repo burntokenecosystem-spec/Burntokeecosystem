@@ -1,5 +1,4 @@
 
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -48,48 +47,83 @@
             cursor: pointer; font-size: 14px;
         }
 
-        /* MAIN CONTENT */
-        .container { display: flex; gap: 30px; width: 95%; max-width: 1100px; margin-top: 40px; justify-content: center; }
+        /* MAIN CONTENT LAYOUT */
+        .container { 
+            display: flex; 
+            gap: 40px; 
+            width: 95%; 
+            max-width: 1200px; 
+            margin-top: 40px; 
+            justify-content: center;
+            align-items: flex-start;
+        }
 
-        /* AD SIDEBARS */
-        .ad-panel {
-            flex: 0 0 200px; background: var(--panel); border-radius: 12px;
-            padding: 20px; display: flex; flex-direction: column; gap: 15px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        /* EXAMPLE AD SIDEBARS */
+        .ad-sidebar {
+            flex: 0 0 220px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 20px;
         }
+        .ad-title { font-size: 10px; color: var(--subtext); font-weight: 800; letter-spacing: 1px; margin-bottom: -10px; }
+        
         .ad-box {
-            width: 100%; height: 200px; border: 1px solid #444; border-radius: 8px;
-            display: flex; align-items: center; justify-content: center; text-align: center;
-            color: var(--gold); font-size: 12px; font-weight: 700; padding: 10px; box-sizing: border-box;
+            width: 100%; 
+            height: 250px; 
+            background: var(--panel); 
+            border: 1px solid #444; 
+            border-radius: 12px;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            text-align: center;
+            color: var(--gold); 
+            font-size: 13px; 
+            font-weight: 700; 
+            padding: 20px; 
+            box-sizing: border-box;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: 0.3s;
+            cursor: pointer;
         }
+        .ad-box:hover { border-color: var(--gold); transform: scale(1.02); }
 
         /* CENTRAL TERMINAL */
         .terminal {
-            flex: 1; max-width: 480px; background: var(--panel); border-radius: 16px;
-            padding: 50px 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); text-align: center;
+            flex: 1; 
+            max-width: 500px; 
+            background: var(--panel); 
+            border-radius: 20px;
+            padding: 60px 40px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4); 
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.05);
         }
 
-        .label { font-size: 12px; color: var(--subtext); letter-spacing: 1px; font-weight: 600; }
-        .balance { font-size: 52px; font-weight: 800; margin: 15px 0; letter-spacing: -1px; }
-        .yield-text { color: var(--green); font-weight: bold; font-size: 16px; }
+        .label { font-size: 13px; color: var(--subtext); letter-spacing: 1.5px; font-weight: 600; text-transform: uppercase; }
+        .balance { font-size: 60px; font-weight: 800; margin: 20px 0; letter-spacing: -2px; color: #fff; }
+        .yield-text { color: var(--green); font-weight: bold; font-size: 18px; }
 
-        /* BUTTONS */
-        .btn-stack { display: flex; flex-direction: column; gap: 12px; margin-top: 40px; }
+        /* BUTTON STACK */
+        .btn-stack { display: flex; flex-direction: column; gap: 15px; margin-top: 40px; }
         .main-btn {
-            padding: 18px; border-radius: 10px; border: none; font-weight: 800;
+            padding: 20px; border-radius: 12px; border: none; font-weight: 800;
             font-size: 16px; cursor: pointer; transition: 0.2s;
+            text-transform: uppercase;
         }
         .btn-yellow { background-color: #ffcc33; color: #000; }
-        .btn-yellow:hover { background-color: #ffd65c; transform: translateY(-2px); }
+        .btn-yellow:hover { background-color: #ffd65c; box-shadow: 0 0 20px rgba(255, 204, 51, 0.3); }
+        
         .btn-purple { 
             background: linear-gradient(135deg, #a463f2 0%, #7d3cf2 100%); 
             color: #fff; margin-top: 10px;
         }
-        .main-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+        .btn-purple:hover { box-shadow: 0 0 20px rgba(155, 89, 182, 0.4); }
+        .main-btn:disabled { opacity: 0.2; cursor: not-allowed; }
 
-        footer { margin-top: auto; padding: 40px; color: var(--subtext); font-size: 12px; }
+        footer { margin-top: auto; padding: 50px; color: #333; font-size: 12px; letter-spacing: 2px; }
 
-        @media (max-width: 900px) { .ad-panel { display: none; } }
+        @media (max-width: 1000px) { .ad-sidebar { display: none; } }
     </style>
 </head>
 <body onload="init()">
@@ -114,41 +148,41 @@
     </header>
 
     <div class="container">
-        <div class="ad-panel">
-            <div style="font-size: 10px; color: var(--subtext); font-weight: bold;">AD PLACEMENT</div>
-            <div class="ad-box">THIS COULD BE<br>YOUR AD</div>
-            <div class="ad-box">THIS COULD BE<br>HERE</div>
+        <div class="ad-sidebar">
+            <span class="ad-title">ADVERTISEMENT</span>
+            <div class="ad-box" onclick="alert('Slot Available')">THIS COULD BE<br>YOUR AD</div>
+            <div class="ad-box" onclick="alert('Slot Available')">YOUR BRAND<br>HERE</div>
         </div>
 
         <div class="terminal">
-            <span class="label">SECURE VAULT BALANCE</span>
+            <span class="label">Secure Vault Balance</span>
             <div class="balance" id="bal">1,000.0000</div>
             <div class="yield-text">Mining Rate: +<span id="yield">5.00</span> $BURN / 24h</div>
 
             <div class="btn-stack">
-                <button class="main-btn btn-yellow" onclick="runAuth()">Authorize Shift (3 Ads)</button>
+                <button class="main-btn btn-yellow" onclick="runAuth()">1. Authorize Shift (3 Ads)</button>
                 <button class="main-btn btn-yellow" id="startBtn" disabled onclick="bootNode()">2. Activate Node</button>
                 <button class="main-btn btn-purple" onclick="upgrade()">
                     Turbo Multiplier (2x)
-                    <div style="font-size: 11px; font-weight: 500; opacity: 0.9;" id="cost">Cost: 1,000 $BURN</div>
+                    <div style="font-size: 11px; font-weight: 500; opacity: 0.8; margin-top: 5px;" id="cost">Cost: 1,000 $BURN</div>
                 </button>
             </div>
         </div>
 
-        <div class="ad-panel">
-            <div style="font-size: 10px; color: var(--subtext); font-weight: bold;">AD PLACEMENT</div>
-            <div class="ad-box">THIS COULD BE<br>YOUR AD</div>
-            <div class="ad-box">THIS COULD BE<br>HERE</div>
+        <div class="ad-sidebar">
+            <span class="ad-title">ADVERTISEMENT</span>
+            <div class="ad-box" onclick="alert('Slot Available')">THIS COULD BE<br>YOUR AD</div>
+            <div class="ad-box" onclick="alert('Slot Available')">YOUR BRAND<br>HERE</div>
         </div>
     </div>
 
-    <footer>FLORIDA DEVELOPMENT UNIT // FOUNDER: SHANE</footer>
+    <footer>&copy; 2025 $BURN ECOSYSTEM</footer>
 
     <script>
         let s = { bal: 1000.0, yld: 5.0, cst: 1000, active: false, last: Date.now() };
 
         function init() {
-            const data = localStorage.getItem('burn_final_v5');
+            const data = localStorage.getItem('burn_final_v5_1');
             if (data) {
                 const p = JSON.parse(data);
                 const diff = (Date.now() - p.last) / 1000;
@@ -170,7 +204,7 @@
 
         function bootNode() {
             s.active = true;
-            alert("Node Online. Mining Started.");
+            alert("Neural Mining Node Activated.");
         }
 
         function upgrade() {
@@ -182,7 +216,7 @@
         function connectWallet() {
             const b = document.getElementById('walletBtn');
             b.innerText = "Connecting...";
-            setTimeout(() => { b.innerText = "0x71...4F92"; b.style.backgroundColor = "#43b581"; b.style.color = "#fff"; }, 1000);
+            setTimeout(() => { b.innerText = "0x71...4F92"; b.style.backgroundColor = "#43b581"; b.style.color = "#fff"; }, 800);
         }
 
         function tick() {
@@ -198,7 +232,7 @@
             document.getElementById('cost').innerText = "Cost: " + s.cst.toLocaleString() + " $BURN";
         }
 
-        function save() { s.last = Date.now(); localStorage.setItem('burn_final_v5', JSON.stringify(s)); }
+        function save() { s.last = Date.now(); localStorage.setItem('burn_final_v5_1', JSON.stringify(s)); }
     </script>
 </body>
 </html>
